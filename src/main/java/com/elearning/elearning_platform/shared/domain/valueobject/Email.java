@@ -35,10 +35,10 @@ public class Email {
      */
     private Email(String value) {
         if (value == null || value.isBlank()) {
-            throw new IllegalArgumentException("El email no puede estar vacío");
+            throw new IllegalArgumentException("Email cannot be empty");
         }
         if (!EMAIL_PATTERN.matcher(value).matches()) {
-            throw new IllegalArgumentException("Formato de email inválido: " + value);
+            throw new IllegalArgumentException("Email format is not valid: " + value);
         }
         this.value = value.toLowerCase();
     }
