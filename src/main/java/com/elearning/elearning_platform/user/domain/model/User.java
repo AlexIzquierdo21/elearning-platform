@@ -76,7 +76,7 @@ public class User {
             throw new IllegalArgumentException("Role must not be null");
         }
 
-        validatePassword(password);
+        validateRawPassword(password);
 
         return new User(
                 null,
@@ -92,7 +92,7 @@ public class User {
     /**
      * Validates password strength according to business rules.
      */
-    private static void validatePassword(String password) {
+    public static void validateRawPassword(String password) {
         if (password.length() < 8) {
             throw new IllegalArgumentException(
                     "Password must be at least 8 characters long"

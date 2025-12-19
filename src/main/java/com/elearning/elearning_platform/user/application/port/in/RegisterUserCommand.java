@@ -1,5 +1,8 @@
 package com.elearning.elearning_platform.user.application.port.in;
 
+import com.elearning.elearning_platform.user.application.usecase.RegisterUserUseCase;
+import com.elearning.elearning_platform.user.domain.model.Role;
+
 /**
  * Command object for registering a new user.
  *
@@ -8,7 +11,7 @@ package com.elearning.elearning_platform.user.application.port.in;
  * infrastructure layer (e.g., HTTP request body).
  *
  * Important: The conversion from raw types (like {@link String} role)
- * to domain types (like {@link com.elearning.elearning_platform.user.domain.model.Role})
+ * to domain types (like {@link Role})
  * is performed inside the corresponding UseCase. This keeps the
  * domain layer independent and clean.
  *
