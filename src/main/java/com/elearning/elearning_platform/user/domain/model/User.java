@@ -3,6 +3,7 @@ package com.elearning.elearning_platform.user.domain.model;
 import com.elearning.elearning_platform.shared.domain.valueobject.Email;
 
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * Domain entity that represents a User within the system.
@@ -16,7 +17,7 @@ import java.util.Objects;
  */
 public class User {
 
-    private final Long id;
+    private final UUID id;
     private final Email email;
     private final String password;
     private final String firstName;
@@ -30,7 +31,7 @@ public class User {
      * Used internally and for rehydrating existing users
      * from persistence storage.
      */
-    private User(Long id,
+    private User(UUID id,
                 Email email,
                 String password,
                 String firstName,
@@ -117,7 +118,7 @@ public class User {
 
     // Getters
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
@@ -173,7 +174,7 @@ public class User {
      * @param active whether the user is active
      * @return a User instance loaded from persistence
      */
-    public static User fromRepository(Long id, Email email, String password,
+    public static User fromRepository(UUID id, Email email, String password,
                                       String firstName, String lastName,
                                       Role role, boolean active) {
         return new User(id, email, password, firstName, lastName, role, active);

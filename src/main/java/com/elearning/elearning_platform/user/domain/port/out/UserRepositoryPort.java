@@ -6,6 +6,7 @@ import com.elearning.elearning_platform.user.domain.model.User;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Port interface that defines the contract for persisting and retrieving {@link User} entities.
@@ -31,7 +32,7 @@ public interface UserRepositoryPort {
      * @param id the ID of the user
      * @return an {@link Optional} containing the user if found, or empty otherwise
      */
-    Optional<User> findById(Long id);
+    Optional<User> findById(UUID id);
 
     /**
      * Retrieves a user by its unique email.
@@ -54,7 +55,7 @@ public interface UserRepositoryPort {
      *
      * @param id the ID of the user to delete
      */
-    void deleteById(Long id);
+    void deleteById(UUID id);
 
     /**
      * Retrieves all users in the system.

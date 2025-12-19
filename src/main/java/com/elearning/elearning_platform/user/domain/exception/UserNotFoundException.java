@@ -3,6 +3,8 @@ package com.elearning.elearning_platform.user.domain.exception;
 import com.elearning.elearning_platform.shared.domain.exception.DomainException;
 import com.elearning.elearning_platform.shared.domain.valueobject.Email;
 
+import java.util.UUID;
+
 /**
  * Exception thrown when a user cannot be found in the system.
  *
@@ -23,7 +25,7 @@ public class UserNotFoundException extends DomainException {
      *
      * @param userId the unique identifier of the user
      */
-    public UserNotFoundException(Long userId) {
+    public UserNotFoundException(UUID userId) {
         super("User not found with id: " + userId);
     }
 
