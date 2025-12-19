@@ -7,6 +7,7 @@ import com.elearning.elearning_platform.user.domain.exception.InvalidCredentials
 import com.elearning.elearning_platform.user.domain.model.Role;
 import com.elearning.elearning_platform.user.domain.model.User;
 import com.elearning.elearning_platform.user.domain.port.out.UserRepositoryPort;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -19,6 +20,15 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+/**
+ * Unit tests for {@link LoginUseCase}.
+ *
+ * Covers main scenarios:
+ * - Happy path (login successfully)
+ * - User not found
+ * - User inactive
+ * - Incorrect password
+ */
 @ExtendWith(MockitoExtension.class)
 class LoginUseCaseTest {
 
@@ -35,22 +45,29 @@ class LoginUseCaseTest {
     private LoginUseCase loginUseCase;
 
     /**
-     * Happy path: login exitoso y token generado
+     * Helper to create a User instance for tests.
      */
-    @Test
-    void shouldLoginSuccessfully() {
-        LoginCommand command = new LoginCommand("test@deepcode.com", "Password1");
-
-        // Usa fromRepository en lugar de create
-        User user = User.fromRepository(
+    private User user(String email, String hashedPassword, boolean active) {
+        return User.fromRepository(
                 1L,
-                Email.of(command.email()),
-                "$2a$12$hashedPassword",  // Password ya hasheado
+                Email.of(email),
+                hashedPassword,
                 "Alex",
                 "Izquierdo",
                 Role.STUDENT,
-                true
+                active
         );
+    }
+
+    /**
+     * Happy path: login successfully and JWT token generated.
+     */
+    @Test
+    @DisplayName("should login successfully")
+    void shouldLoginSuccessfully() {
+        LoginCommand command = new LoginCommand("test@deepcode.com", "Password1");
+
+        User user = user(command.email(), "$2a$12$hashedPassword", true);
 
         when(userRepository.findByEmail(any(Email.class))).thenReturn(Optional.of(user));
         when(passwordEncoder.matches(command.password(), user.getPassword())).thenReturn(true);
@@ -60,12 +77,14 @@ class LoginUseCaseTest {
         String token = loginUseCase.execute(command);
 
         assertEquals("jwt-token", token);
+        verify(tokenGenerator).generateToken(user.getEmail().getValue(), user.getRole().name());
     }
 
     /**
-     * Lanza excepción si el usuario no existe
+     * Throws exception if user is not found.
      */
     @Test
+    @DisplayName("should throw exception when user not found")
     void shouldThrowExceptionWhenUserNotFound() {
         LoginCommand command = new LoginCommand("notfound@deepcode.com", "Password1");
 
@@ -75,22 +94,14 @@ class LoginUseCaseTest {
     }
 
     /**
-     * Lanza excepción si el usuario está desactivado
+     * Throws exception if user is inactive.
      */
     @Test
+    @DisplayName("should throw exception when user is inactive")
     void shouldThrowExceptionWhenUserIsInactive() {
         LoginCommand command = new LoginCommand("test@deepcode.com", "Password1");
 
-        // Directamente crear usuario inactivo
-        User inactiveUser = User.fromRepository(
-                1L,
-                Email.of(command.email()),
-                "$2a$12$hashedPassword",
-                "Alex",
-                "Izquierdo",
-                Role.STUDENT,
-                false  // inactive
-        );
+        User inactiveUser = user(command.email(), "$2a$12$hashedPassword", false);
 
         when(userRepository.findByEmail(any(Email.class))).thenReturn(Optional.of(inactiveUser));
 
@@ -98,21 +109,14 @@ class LoginUseCaseTest {
     }
 
     /**
-     * Lanza excepción si la contraseña es incorrecta
+     * Throws exception if password is incorrect.
      */
     @Test
+    @DisplayName("should throw exception when password is incorrect")
     void shouldThrowExceptionWhenPasswordIsIncorrect() {
         LoginCommand command = new LoginCommand("test@deepcode.com", "WrongPassword");
 
-        User user = User.fromRepository(
-                1L,
-                Email.of("test@deepcode.com"),
-                "$2a$12$hashedPassword",
-                "Alex",
-                "Izquierdo",
-                Role.STUDENT,
-                true
-        );
+        User user = user(command.email(), "$2a$12$hashedPassword", true);
 
         when(userRepository.findByEmail(any(Email.class))).thenReturn(Optional.of(user));
         when(passwordEncoder.matches(command.password(), user.getPassword())).thenReturn(false);
@@ -120,4 +124,5 @@ class LoginUseCaseTest {
         assertThrows(InvalidCredentialsException.class, () -> loginUseCase.execute(command));
     }
 }
+
 

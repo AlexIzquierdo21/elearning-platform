@@ -6,6 +6,7 @@ import com.elearning.elearning_platform.user.domain.exception.DuplicateEmailExce
 import com.elearning.elearning_platform.user.domain.model.Role;
 import com.elearning.elearning_platform.user.domain.model.User;
 import com.elearning.elearning_platform.user.domain.port.out.UserRepositoryPort;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -17,6 +18,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+/**
+ * Unit tests for {@link RegisterUserUseCase}.
+ *
+ * Covers all main scenarios:
+ * - Happy path (user registered successfully)
+ * - Duplicate email
+ * - Invalid role
+ * - Weak password
+ */
 @ExtendWith(MockitoExtension.class)
 class RegisterUserUseCaseTest {
 
@@ -30,33 +40,41 @@ class RegisterUserUseCaseTest {
     private RegisterUserUseCase registerUserUseCase;
 
     /**
-     * Happy path: registra un usuario correctamente
+     * Helper to build RegisterUserCommand instances
      */
-    @Test
-    void shouldRegisterUserSuccessfully() {
-        RegisterUserCommand command = new RegisterUserCommand(
-                "test@deepcode.com",
-                "Password1",
+    private RegisterUserCommand command(String email, String password, String role) {
+        return new RegisterUserCommand(
+                email,
+                password,
                 "Alex",
                 "Izquierdo",
-                "STUDENT"
+                role
         );
+    }
+
+    /**
+     * Happy path: registers a user successfully.
+     */
+    @Test
+    @DisplayName("should register user successfully")
+    void shouldRegisterUserSuccessfully() {
+        RegisterUserCommand command = command("test@deepcode.com", "Password1", "STUDENT");
 
         when(userRepository.existsByEmail(any(Email.class))).thenReturn(false);
         when(passwordEncoder.encode(command.password())).thenReturn("$2a$12$hashedPassword");
 
-        // Capturar el User que se pasa a save()
+        // Capture the User passed to save()
         ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
         when(userRepository.save(userCaptor.capture())).thenAnswer(invocation -> invocation.getArgument(0));
 
         // When
         registerUserUseCase.execute(command);
 
-        // Then - verificar el User capturado
+        // Then - verify captured User
         User savedUser = userCaptor.getValue();
         assertNotNull(savedUser);
-        assertEquals(command.firstName(), savedUser.getFirstName());
-        assertEquals(command.lastName(), savedUser.getLastName());
+        assertEquals("Alex", savedUser.getFirstName());
+        assertEquals("Izquierdo", savedUser.getLastName());
         assertEquals(Role.STUDENT, savedUser.getRole());
         assertEquals("$2a$12$hashedPassword", savedUser.getPassword());
 
@@ -66,17 +84,12 @@ class RegisterUserUseCaseTest {
     }
 
     /**
-     * Lanza excepción cuando el email ya existe
+     * Throws exception when email already exists.
      */
     @Test
+    @DisplayName("should throw exception when email already exists")
     void shouldThrowExceptionWhenEmailAlreadyExists() {
-        RegisterUserCommand command = new RegisterUserCommand(
-                "test@deepcode.com",
-                "Password1",
-                "Alex",
-                "Izquierdo",
-                "STUDENT"
-        );
+        RegisterUserCommand command = command("test@deepcode.com", "Password1", "STUDENT");
 
         when(userRepository.existsByEmail(Email.of(command.email()))).thenReturn(true);
 
@@ -85,17 +98,12 @@ class RegisterUserUseCaseTest {
     }
 
     /**
-     * Lanza excepción cuando el rol no es válido
+     * Throws exception when role is invalid.
      */
     @Test
+    @DisplayName("should throw exception when role is invalid")
     void shouldThrowExceptionWhenRoleIsInvalid() {
-        RegisterUserCommand command = new RegisterUserCommand(
-                "test@deepcode.com",
-                "Password1",
-                "Alex",
-                "Izquierdo",
-                "INVALID_ROLE"
-        );
+        RegisterUserCommand command = command("test@deepcode.com", "Password1", "INVALID_ROLE");
 
         when(userRepository.existsByEmail(Email.of(command.email()))).thenReturn(false);
 
@@ -104,17 +112,12 @@ class RegisterUserUseCaseTest {
     }
 
     /**
-     * Lanza excepción cuando la contraseña es débil
+     * Throws exception when password is weak.
      */
     @Test
+    @DisplayName("should throw exception when password is weak")
     void shouldThrowExceptionWhenPasswordIsWeak() {
-        RegisterUserCommand command = new RegisterUserCommand(
-                "test@deepcode.com",
-                "weak",
-                "Alex",
-                "Izquierdo",
-                "STUDENT"
-        );
+        RegisterUserCommand command = command("test@deepcode.com", "weak", "STUDENT");
 
         when(userRepository.existsByEmail(Email.of(command.email()))).thenReturn(false);
 
