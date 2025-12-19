@@ -1,0 +1,162 @@
+package com.elearning.elearning_platform.user.domain.model;
+
+import com.elearning.elearning_platform.shared.domain.valueobject.Email;
+
+import java.util.Objects;
+
+/**
+ * Domain entity that represents a User within the system.
+ *
+ * This class is a pure domain model (POJO) and contains no persistence
+ * or framework-specific annotations.
+ *
+ * The User entity encapsulates core business rules related to user
+ * creation and identity, enforcing invariants such as password
+ * validity and email uniqueness.
+ */
+public class User {
+
+    private final Long id;
+    private final Email email;
+    private final String password;
+    private final String firstName;
+    private final String lastName;
+    private final Role role;
+    private final Boolean active;
+
+    /**
+     * Full private constructor.
+     *
+     * Used internally and for rehydrating existing users
+     * from persistence storage.
+     */
+    private User(Long id,
+                Email email,
+                String password,
+                String firstName,
+                String lastName,
+                Role role,
+                Boolean active
+    ) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.role = role;
+        this.active = active;
+    }
+
+    /**
+     * Factory method for creating new users.
+     *
+     * Applies all business validations required for user creation
+     * and returns a new User instance without an assigned id.
+     */
+    public static User create(
+            Email email,
+            String password,
+            String firstName,
+            String lastName,
+            Role role
+    ) {
+        if (email == null) {
+            throw new IllegalArgumentException("Email must not be null");
+        }
+        if (password == null) {
+            throw new IllegalArgumentException("Password must not be null");
+        }
+        if (firstName == null) {
+            throw new IllegalArgumentException("First name must not be null");
+        }
+        if (lastName == null) {
+            throw new IllegalArgumentException("Last name must not be null");
+        }
+        if (role == null) {
+            throw new IllegalArgumentException("Role must not be null");
+        }
+
+        validatePassword(password);
+
+        return new User(
+                null,
+                email,
+                password,
+                firstName,
+                lastName,
+                role,
+                true
+        );
+    }
+
+    /**
+     * Validates password strength according to business rules.
+     */
+    private static void validatePassword(String password) {
+        if (password.length() < 8) {
+            throw new IllegalArgumentException(
+                    "Password must be at least 8 characters long"
+            );
+        }
+        if (password.chars().noneMatch(Character::isUpperCase)) {
+            throw new IllegalArgumentException(
+                    "Password must contain at least one uppercase letter"
+            );
+        }
+        if (password.chars().noneMatch(Character::isLowerCase)) {
+            throw new IllegalArgumentException(
+                    "Password must contain at least one lowercase letter"
+            );
+        }
+        if (password.chars().noneMatch(Character::isDigit)) {
+            throw new IllegalArgumentException(
+                    "Password must contain at least one digit"
+            );
+        }
+    }
+
+    // Getters
+
+    public Long getId() {
+        return id;
+    }
+
+    public Email getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    /**
+     * Users are compared by their business identifier (email).
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User user)) return false;
+        return email.equals(user.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(email);
+    }
+}
