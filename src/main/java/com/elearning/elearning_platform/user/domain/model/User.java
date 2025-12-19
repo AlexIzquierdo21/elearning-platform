@@ -159,4 +159,23 @@ public class User {
     public int hashCode() {
         return Objects.hash(email);
     }
+
+    /**
+     * Factory method for loading existing users from persistence.
+     * Used when retrieving users from the database.
+     *
+     * @param id the user's database ID
+     * @param email the user's email
+     * @param password the user's hashed password
+     * @param firstName the user's first name
+     * @param lastName the user's last name
+     * @param role the user's role
+     * @param active whether the user is active
+     * @return a User instance loaded from persistence
+     */
+    public static User fromRepository(Long id, Email email, String password,
+                                      String firstName, String lastName,
+                                      Role role, boolean active) {
+        return new User(id, email, password, firstName, lastName, role, active);
+    }
 }
