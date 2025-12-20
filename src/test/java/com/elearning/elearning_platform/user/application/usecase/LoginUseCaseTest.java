@@ -16,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -49,7 +50,7 @@ class LoginUseCaseTest {
      */
     private User user(String email, String hashedPassword, boolean active) {
         return User.fromRepository(
-                1L,
+                UUID.randomUUID(),
                 Email.of(email),
                 hashedPassword,
                 "Alex",
