@@ -44,24 +44,20 @@ public class SecurityConfig {
      * Configures the Spring Security filter chain with JWT authentication
      * and role-based authorization.
      *
-     * <p><strong>Route Authorization:</strong>
-     * <ul>
-     *   <li>{@code /auth/**} - Public (registration, login)</li>
-     *   <li>{@code /h2-console/**} - Public (development only)</li>
-     *   <li>{@code /admin/**} - Requires ADMIN role</li>
-     *   <li>{@code /instructor/**} - Requires INSTRUCTOR role</li>
-     *   <li>{@code /student/**} - Requires STUDENT role</li>
-     *   <li>All other routes - Requires authentication</li>
-     * </ul>
+     *  Route Authorization:
+     *   {@code /auth/**} - Public (registration, login)
+     *   {@code /h2-console/**} - Public (development only)
+     *   {@code /admin/**} - Requires ADMIN role
+     *   {@code /instructor/**} - Requires INSTRUCTOR role
+     *   {@code /student/**} - Requires STUDENT role
+     *   All other routes - Requires authentication
      *
-     * <p><strong>Security Features:</strong>
-     * <ul>
-     *   <li>CSRF disabled (stateless API)</li>
-     *   <li>Frame options disabled (H2 console support)</li>
-     *   <li>Stateless session management</li>
-     *   <li>Custom authentication/authorization error handlers</li>
-     *   <li>JWT filter integrated into security chain</li>
-     * </ul>
+     * Security Features:
+     *   CSRF disabled (stateless API)<
+     *   Frame options disabled (H2 console support)
+     *   Stateless session management
+     *   Custom authentication/authorization error handlers
+     *   JWT filter integrated into security chain
      *
      * @param http the {@link HttpSecurity} to configure
      * @return the configured {@link SecurityFilterChain}
