@@ -9,21 +9,21 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.context.SecurityContextHolderFilter;
 
 /**
- * Basic security configuration for the application.
+ * Spring Security configuration for JWT-based authentication and authorization.
  *
- * This is a temporary configuration for development that disables
- * security to allow unrestricted access. It will be replaced in
- * Sprint 3 with proper role-based authentication and JWT filtering.
+ * <p>This configuration establishes a stateless REST API security model with:
+ * <ul>
+ *   <li>JWT token authentication via custom filter</li>
+ *   <li>Role-based access control (RBAC) for protected endpoints</li>
+ *   <li>Public access to authentication and development endpoints</li>
+ *   <li>Proper HTTP status codes for authentication/authorization failures</li>
+ * </ul>
  *
- * Provides:
- *
- *   Disabled CSRF protection (required for REST APIs)
- *   Permit all requests without authentication
- *   BCrypt password encoder for future authentication
- *
+ * <p>Security is enforced through a custom {@link JwtAuthenticationFilter} that
+ * validates JWT tokens and loads user authorities into the security context.
  */
 @Configuration
 @EnableWebSecurity
@@ -31,29 +31,41 @@ public class SecurityConfig {
 
     private final JwtUtil jwtUtil;
 
+    /**
+     * Constructs the security configuration with required dependencies.
+     *
+     * @param jwtUtil utility for JWT token operations
+     */
     public SecurityConfig(JwtUtil jwtUtil) {
         this.jwtUtil = jwtUtil;
     }
 
     /**
-     * Configures the Spring Security filter chain for the application.
+     * Configures the Spring Security filter chain with JWT authentication
+     * and role-based authorization.
      *
-     * Security configuration details:
-     * - Disables CSRF protection (useful for stateless REST APIs).
-     * - Disables frame options to allow H2 console access.
-     * - Defines route authorization rules:
-     *     - "/auth/**" and "/h2-console/**" are publicly accessible.
-     *     - "/admin/**" requires "ADMIN" role.
-     *     - "/instructor/**" requires "INSTRUCTOR" role.
-     *     - "/student" requires "STUDENT" role.
-     *     - All other requests require authentication.
-     * - Configures stateless session management (no HTTP sessions).
-     * - Adds JwtAuthenticationFilter before the UsernamePasswordAuthenticationFilter
-     *   to handle JWT validation and authentication.
+     * <p><strong>Route Authorization:</strong>
+     * <ul>
+     *   <li>{@code /auth/**} - Public (registration, login)</li>
+     *   <li>{@code /h2-console/**} - Public (development only)</li>
+     *   <li>{@code /admin/**} - Requires ADMIN role</li>
+     *   <li>{@code /instructor/**} - Requires INSTRUCTOR role</li>
+     *   <li>{@code /student/**} - Requires STUDENT role</li>
+     *   <li>All other routes - Requires authentication</li>
+     * </ul>
      *
-     * @param http the HttpSecurity object to configure
-     * @return the configured SecurityFilterChain
-     * @throws Exception if an error occurs while building the filter chain
+     * <p><strong>Security Features:</strong>
+     * <ul>
+     *   <li>CSRF disabled (stateless API)</li>
+     *   <li>Frame options disabled (H2 console support)</li>
+     *   <li>Stateless session management</li>
+     *   <li>Custom authentication/authorization error handlers</li>
+     *   <li>JWT filter integrated into security chain</li>
+     * </ul>
+     *
+     * @param http the {@link HttpSecurity} to configure
+     * @return the configured {@link SecurityFilterChain}
+     * @throws Exception if configuration fails
      */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -67,13 +79,11 @@ public class SecurityConfig {
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/instructor/**").hasRole("INSTRUCTOR")
                         .requestMatchers("/student/**").hasRole("STUDENT")
-
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint((request, response, authException) ->
                                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized")
@@ -87,20 +97,21 @@ public class SecurityConfig {
                 )
                 .addFilterAfter(
                         new JwtAuthenticationFilter(jwtUtil),
-                        UsernamePasswordAuthenticationFilter.class
+                        SecurityContextHolderFilter.class
                 );
 
         return http.build();
     }
 
     /**
-     * Provides a password encoder bean using BCrypt algorithm.
+     * Provides a BCrypt password encoder for secure password hashing.
      *
-     * BCrypt is a strong password hashing function designed to be slow,
-     * making brute-force attacks more difficult. The strength of 12
-     * represents 2^12 iterations (4096 rounds).
+     * <p>BCrypt is a deliberately slow hashing algorithm designed to resist
+     * brute-force attacks. The configured strength of 12 represents 2^12
+     * (4096) hashing rounds, providing a balance between security and
+     * performance for typical authentication workloads.
      *
-     * @return BCryptPasswordEncoder with strength 12
+     * @return BCrypt password encoder with strength 12
      */
     @Bean
     public PasswordEncoder passwordEncoder() {
