@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -54,26 +55,36 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
 
         String token = extractTokenFromRequest(request);
+        System.out.println("🔍 Token extraído: " + (token != null ? "SÍ" : "NO"));
 
         if (token != null) {
             String email = jwtUtil.extractEmail(token);
+            System.out.println("📧 Email extraído: " + email);
 
             if (email != null &&
                     SecurityContextHolder.getContext().getAuthentication() == null &&
                     jwtUtil.validateToken(token, email)) {
 
                 String role = jwtUtil.extractRole(token);
+                System.out.println("👤 Role extraído: " + role);
 
                 List<SimpleGrantedAuthority> authorities = List.of(
                         new SimpleGrantedAuthority("ROLE_" + role)
                 );
 
+                System.out.println("✅ Authorities: " + authorities);
+
                 UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(
-                                email, null, authorities
-                        );
+                        new UsernamePasswordAuthenticationToken(email, null, authorities);
+
+                authentication.setDetails(
+                        new WebAuthenticationDetailsSource().buildDetails(request)
+                );
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+                System.out.println("✅ Autenticación cargada en SecurityContext");
+            } else {
+                System.out.println("❌ Token inválido o email null");
             }
         }
 
