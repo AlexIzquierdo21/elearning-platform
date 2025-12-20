@@ -35,10 +35,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      * Main filter method executed for each incoming request.
      *
      * Flow:
-     * - Extracts the token from the Authorization header.
-     * - If it exists and is valid, extracts email and role.
-     * - Creates an Authentication object and sets it in the SecurityContext.
-     * - Continues with the filter chain.
+     *  - Extracts the token from the Authorization header.
+     *  - If it exists and is valid, extracts email and role.
+     *  - Creates an Authentication object and sets it in the SecurityContext.
+     *  - Continues with the filter chain.
      *
      * @param request HTTP request
      * @param response HTTP response
@@ -57,7 +57,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (token != null) {
             String email = jwtUtil.extractEmail(token);
-            if (email != null && jwtUtil.validateToken(token, email)); {
+
+            if (email != null &&
+                    SecurityContextHolder.getContext().getAuthentication() == null &&
+                    jwtUtil.validateToken(token, email)) {
+
                 String role = jwtUtil.extractRole(token);
 
                 List<SimpleGrantedAuthority> authorities = List.of(

@@ -19,11 +19,10 @@ import java.util.Date;
  * application properties.
  *
  * Each token contains:
- *
- *   Subject: user's email
- *   Custom claim "role": user's role (ADMIN, INSTRUCTOR, STUDENT)
- *   Issued at: token creation timestamp
- *   Expiration: token expiration timestamp
+ *  - Subject: user's email
+ *  - Custom claim "role": user's role (ADMIN, INSTRUCTOR, STUDENT)
+ *  - Issued at: token creation timestamp
+ *  - Expiration: token expiration timestamp
  *
  * @see io.jsonwebtoken.Jwts
  * @see SecretKey
@@ -44,7 +43,8 @@ public class JwtUtil {
      * @param secret the secret key string from application properties
      * @param expiration the token expiration time in milliseconds
      */
-    public JwtUtil(@Value("${jwt.secret}") String secret,
+    public JwtUtil(@Value("${jwt.secret}")
+                   String secret,
                    @Value("${jwt.expiration}") long expiration) {
         // Usar el secret directamente sin decodificar Base64
         this.secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
