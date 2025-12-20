@@ -1,5 +1,7 @@
 package com.elearning.elearning_platform.user.application.port.in;
 
+import com.elearning.elearning_platform.user.application.usecase.LoginUseCase;
+
 /**
  * Command object for logging in a user.
  *

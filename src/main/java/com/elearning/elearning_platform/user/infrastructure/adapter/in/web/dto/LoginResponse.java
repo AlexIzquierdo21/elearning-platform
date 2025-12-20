@@ -35,7 +35,7 @@ public class LoginResponse {
      */
     public LoginResponse(String token, String type, Long expiresIn) {
         this.token = token;
-        this.type = "Bearer";
+        this.type = type;
         this.expiresIn = expiresIn;
     }
 
