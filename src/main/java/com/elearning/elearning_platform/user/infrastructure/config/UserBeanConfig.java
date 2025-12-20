@@ -64,3 +64,4 @@ public class UserBeanConfig {
         return new LoginUseCase(userRepository, passwordEncoder, tokenGenerator);
     }
 }
+
