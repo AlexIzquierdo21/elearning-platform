@@ -92,7 +92,7 @@ erDiagram
     COURSES ||--o{ ENROLLMENTS : "has students"
     
     USERS {
-        Long id PK
+        UUID id PK
         String email UK "Único"
         String password "BCrypt"
         String first_name
@@ -104,7 +104,7 @@ erDiagram
     }
 
     CATEGORIES {
-        Long id PK
+        UUID id PK
         String name UK
         String description
         String slug "URL-friendly"
@@ -113,7 +113,7 @@ erDiagram
     }
 
     COURSES {
-        Long id PK
+        UUID id PK
         String title
         Text description
         Decimal price "Min: 1€"
@@ -126,7 +126,7 @@ erDiagram
     }
 
     MODULES {
-        Long id PK
+        UUID id PK
         String title
         Text description
         Integer order_index "Orden en curso"
@@ -135,7 +135,7 @@ erDiagram
     }
 
     LESSONS {
-        Long id PK
+        UUID id PK
         String title
         String video_url "YouTube, Vimeo, etc"
         Text content_text "Markdown/HTML - complemento"
@@ -146,7 +146,7 @@ erDiagram
     }
 
     ENROLLMENTS {
-        Long id PK
+        UUID id PK
         Long user_id FK
         Long course_id FK
         Decimal price_paid "Snapshot precio"
