@@ -1,5 +1,6 @@
 package com.elearning.elearning_platform.user.domain.model;
 
+import com.elearning.elearning_platform.shared.domain.exception.ValidationException;
 import com.elearning.elearning_platform.shared.domain.valueobject.Email;
 import com.elearning.elearning_platform.user.domain.valueobject.UserId;
 
@@ -62,19 +63,19 @@ public class User {
             Role role
     ) {
         if (email == null) {
-            throw new IllegalArgumentException("Email must not be null");
+            throw new ValidationException("Email must not be null");
         }
         if (password == null) {
-            throw new IllegalArgumentException("Password must not be null");
+            throw new ValidationException("Password must not be null");
         }
         if (firstName == null) {
-            throw new IllegalArgumentException("First name must not be null");
+            throw new ValidationException("First name must not be null");
         }
         if (lastName == null) {
-            throw new IllegalArgumentException("Last name must not be null");
+            throw new ValidationException("Last name must not be null");
         }
         if (role == null) {
-            throw new IllegalArgumentException("Role must not be null");
+            throw new ValidationException("Role must not be null");
         }
 
         validateRawPassword(password);
@@ -95,22 +96,22 @@ public class User {
      */
     public static void validateRawPassword(String password) {
         if (password.length() < 8) {
-            throw new IllegalArgumentException(
+            throw new ValidationException(
                     "Password must be at least 8 characters long"
             );
         }
         if (password.chars().noneMatch(Character::isUpperCase)) {
-            throw new IllegalArgumentException(
+            throw new ValidationException(
                     "Password must contain at least one uppercase letter"
             );
         }
         if (password.chars().noneMatch(Character::isLowerCase)) {
-            throw new IllegalArgumentException(
+            throw new ValidationException(
                     "Password must contain at least one lowercase letter"
             );
         }
         if (password.chars().noneMatch(Character::isDigit)) {
-            throw new IllegalArgumentException(
+            throw new ValidationException(
                     "Password must contain at least one digit"
             );
         }

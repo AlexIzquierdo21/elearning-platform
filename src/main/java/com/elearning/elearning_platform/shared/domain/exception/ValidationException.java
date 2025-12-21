@@ -22,4 +22,14 @@ public class ValidationException extends DomainException {
     public List<String> getErrors() {
         return errors;
     }
+
+    /**
+     * Creates a validation exception with a single error message.
+     *
+     * @param message the validation error message
+     */
+    public ValidationException(String message) {
+        super(message);
+        this.errors = List.of(message);
+    }
 }
