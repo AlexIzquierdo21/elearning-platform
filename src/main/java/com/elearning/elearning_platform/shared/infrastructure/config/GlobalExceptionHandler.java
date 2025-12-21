@@ -10,8 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.time.Instant;
-
 /**
  * Global exception handler for the application.
  *
@@ -41,7 +39,10 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(DomainException.class)
     public ResponseEntity<ErrorResponse> handleDomainException(DomainException ex) {
-        ErrorResponse errorResponse = ErrorResponse.of(400, "Bad request", ex.getMessage());
+        ErrorResponse errorResponse = ErrorResponse.of(
+                400,
+                "Bad request",
+                ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
@@ -56,7 +57,10 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorResponse> handleNotFoundException(NotFoundException ex) {
-        ErrorResponse errorResponse = ErrorResponse.of(404, "Not Found", ex.getMessage());
+        ErrorResponse errorResponse = ErrorResponse.of(
+                404,
+                "Not Found",
+                ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
@@ -71,7 +75,11 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<ErrorResponse> handleValidationException(ValidationException ex) {
-        ErrorResponse errorResponse = ErrorResponse.withErrors(400, "Bad Request", "Validation failed", ex.getErrors());
+        ErrorResponse errorResponse = ErrorResponse.withErrors(
+                400,
+                "Bad Request",
+                "Validation failed",
+                ex.getErrors());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
@@ -88,7 +96,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
         log.error("Unexpected error occurred", ex);
-        ErrorResponse errorResponse = ErrorResponse.of(500, "Internal Server Error", "An unexpected error");
+        ErrorResponse errorResponse = ErrorResponse.of(
+                500,
+                "Internal Server Error",
+                "An unexpected error"
+        );
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
 
@@ -97,7 +109,11 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<ErrorResponse> handleUnauthorizedException(UnauthorizedException ex) {
-        ErrorResponse errorResponse = ErrorResponse.of(401, "Unauthorized", ex.getMessage());
+        ErrorResponse errorResponse = ErrorResponse.of(
+                401,
+                "Unauthorized",
+                ex.getMessage()
+        );
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
 
@@ -107,7 +123,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<ErrorResponse> handleIllegalStateException(IllegalStateException ex) {
-        ErrorResponse errorResponse = ErrorResponse.of(400, "Bad request", ex.getMessage());
+        ErrorResponse errorResponse = ErrorResponse.of(
+                400,
+                "Bad request",
+                ex.getMessage()
+        );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 }
