@@ -2,12 +2,15 @@ package com.elearning.elearning_platform.shared.infrastructure.config;
 
 import com.elearning.elearning_platform.shared.domain.exception.DomainException;
 import com.elearning.elearning_platform.shared.domain.exception.NotFoundException;
+import com.elearning.elearning_platform.shared.domain.exception.UnauthorizedException;
 import com.elearning.elearning_platform.shared.domain.exception.ValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.time.Instant;
 
 /**
  * Global exception handler for the application.
@@ -87,5 +90,24 @@ public class GlobalExceptionHandler {
         log.error("Unexpected error occurred", ex);
         ErrorResponse errorResponse = ErrorResponse.of(500, "Internal Server Error", "An unexpected error");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+    }
+
+    /**
+     * Handles authentication failures (401 Unauthorized).
+     */
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ErrorResponse> handleUnauthorizedException(UnauthorizedException ex) {
+        ErrorResponse errorResponse = ErrorResponse.of(401, "Unauthorized", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+    }
+
+    /**
+     * Handles authorization failures (403 Forbidden).
+     */
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ErrorResponse> handleIllegalStateException(IllegalStateException ex) {
+        ErrorResponse errorResponse = ErrorResponse.of(400, "Bad request", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 }
