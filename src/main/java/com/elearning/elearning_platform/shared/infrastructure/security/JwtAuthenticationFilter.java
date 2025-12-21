@@ -74,6 +74,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 String role = jwtUtil.extractRole(token);
 
+                System.out.println("🔍 JWT Filter - Email: " + email + ", Role: " + role);
+
                 List<SimpleGrantedAuthority> authorities = List.of(
                         new SimpleGrantedAuthority("ROLE_" + role)
                 );
@@ -86,8 +88,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 );
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                // ✅ LOGS AÑADIDOS
+                System.out.println("✅ Authentication guardada: " + SecurityContextHolder.getContext().getAuthentication());
+                System.out.println("✅ Authorities: " + SecurityContextHolder.getContext().getAuthentication().getAuthorities());
             }
         }
+
+        // ✅ LOG ANTES DE CONTINUAR
+        System.out.println("🚀 Antes de continuar filter chain, auth = " + SecurityContextHolder.getContext().getAuthentication());
 
         filterChain.doFilter(request, response);
     }
