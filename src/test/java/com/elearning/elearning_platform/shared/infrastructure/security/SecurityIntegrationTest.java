@@ -42,7 +42,7 @@ class SecurityIntegrationTest {
     void setUp() throws Exception {
         // Clean database
         userRepository.findAll()
-                .forEach(user -> userRepository.deleteById(user.getId()));
+                .forEach(user -> userRepository.deleteById(user.getId().value()));
 
         // ADMIN
         registerUser("admin@test.com", "Admin1234", "ADMIN");

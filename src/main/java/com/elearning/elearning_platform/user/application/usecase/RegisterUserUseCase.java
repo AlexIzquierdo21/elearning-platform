@@ -6,6 +6,7 @@ import com.elearning.elearning_platform.user.domain.exception.DuplicateEmailExce
 import com.elearning.elearning_platform.user.domain.model.Role;
 import com.elearning.elearning_platform.user.domain.model.User;
 import com.elearning.elearning_platform.user.domain.port.out.UserRepositoryPort;
+import com.elearning.elearning_platform.user.domain.valueobject.UserId;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -55,7 +56,7 @@ public class RegisterUserUseCase {
      * @throws IllegalArgumentException if email format is invalid, password is weak, or role is invalid
      * @throws DuplicateEmailException if a user with the given email already exists
      */
-    public User execute(RegisterUserCommand command) {
+    public UserId execute(RegisterUserCommand command) {
         /// String email converted to Email ValueObject
         Email email = Email.of(command.email());
         /// Email does not exist verification
@@ -82,7 +83,7 @@ public class RegisterUserUseCase {
         /// Saved user
         User savedUser = userRepository.save(user);
 
-        return savedUser;
+        return savedUser.getId();
     }
 }
 

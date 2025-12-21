@@ -2,6 +2,7 @@ package com.elearning.elearning_platform.user.infrastructure.adapter.out.persist
 
 import com.elearning.elearning_platform.shared.domain.valueobject.Email;
 import com.elearning.elearning_platform.user.domain.model.User;
+import com.elearning.elearning_platform.user.domain.valueobject.UserId;
 
 /**
  * Mapper class to convert between Domain {@link User} and JPA {@link UserEntity}.
@@ -26,7 +27,7 @@ public class UserMapper {
      */
     public static UserEntity toEntity(User user) {
         return new UserEntity(
-                user.getId(),
+                user.getId().value(),  // ← CAMBIO: UserId → UUID
                 user.getEmail().getValue(),
                 user.getPassword(),
                 user.getFirstName(),
@@ -44,7 +45,7 @@ public class UserMapper {
      */
     public static User toDomain(UserEntity entity) {
         return User.fromRepository(
-                entity.getId(),
+                UserId.of(entity.getId()),  // ← CAMBIO: UUID → UserId
                 Email.of(entity.getEmail()),
                 entity.getPassword(),
                 entity.getFirstName(),

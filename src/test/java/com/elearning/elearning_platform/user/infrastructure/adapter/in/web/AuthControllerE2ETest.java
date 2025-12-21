@@ -34,7 +34,7 @@ class AuthControllerE2ETest {
     @BeforeEach
     void setUp() {
         // Clear database before each test
-        userRepository.findAll().forEach(user -> userRepository.deleteById(user.getId()));
+        userRepository.findAll().forEach(user -> userRepository.deleteById(user.getId().value()));
     }
 
     @Test

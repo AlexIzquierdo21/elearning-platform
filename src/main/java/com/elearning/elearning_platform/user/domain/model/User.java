@@ -1,9 +1,9 @@
 package com.elearning.elearning_platform.user.domain.model;
 
 import com.elearning.elearning_platform.shared.domain.valueobject.Email;
+import com.elearning.elearning_platform.user.domain.valueobject.UserId;
 
 import java.util.Objects;
-import java.util.UUID;
 
 /**
  * Domain entity that represents a User within the system.
@@ -17,7 +17,7 @@ import java.util.UUID;
  */
 public class User {
 
-    private final UUID id;
+    private final UserId id;
     private final Email email;
     private final String password;
     private final String firstName;
@@ -31,7 +31,7 @@ public class User {
      * Used internally and for rehydrating existing users
      * from persistence storage.
      */
-    private User(UUID id,
+    private User(UserId id,
                 Email email,
                 String password,
                 String firstName,
@@ -80,7 +80,7 @@ public class User {
         validateRawPassword(password);
 
         return new User(
-                null,
+                UserId.generate(),
                 email,
                 password,
                 firstName,
@@ -118,7 +118,7 @@ public class User {
 
     // Getters
 
-    public UUID getId() {
+    public UserId getId() {
         return id;
     }
 
@@ -174,7 +174,7 @@ public class User {
      * @param active whether the user is active
      * @return a User instance loaded from persistence
      */
-    public static User fromRepository(UUID id, Email email, String password,
+    public static User fromRepository(UserId id, Email email, String password,
                                       String firstName, String lastName,
                                       Role role, boolean active) {
         return new User(id, email, password, firstName, lastName, role, active);
