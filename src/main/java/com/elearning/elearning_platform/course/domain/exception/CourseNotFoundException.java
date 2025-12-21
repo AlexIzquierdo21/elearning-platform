@@ -1,28 +1,39 @@
 package com.elearning.elearning_platform.course.domain.exception;
 
+import com.elearning.elearning_platform.course.domain.valueobject.CourseId;
 import com.elearning.elearning_platform.shared.domain.exception.NotFoundException;
 
 /**
- * Exception thrown when a course cannot be found.
+ * Exception thrown when a specified course cannot be found in the system.
+ *
+ * This exception is a specialization of {@link NotFoundException} and is used
+ * specifically for scenarios where an operation fails due to a course not being
+ * available or identifiable by the given criteria.
  */
 public class CourseNotFoundException extends NotFoundException {
 
     /**
-     * Creates an exception using the given CourseId.
+     * Constructs a new CourseNotFoundException with the specified course ID.
      *
-     * @param courseId identifier of the course not found
+     * This exception is thrown when a course identified by the given course ID
+     * cannot be located in the system.
+     *
+     * @param courseId the unique identifier of the course that could not be found
      */
     public CourseNotFoundException(CourseId courseId) {
-        super("Course with id " + courseId + " not found");
+        super("Course", courseId.toString());
     }
 
     /**
-     * Creates an exception with a custom message.
+     * Constructs a new CourseNotFoundException with a detailed message.
      *
-     * @param message custom error message
+     * This exception indicates that a specific course could not be found,
+     * providing additional context through a descriptive message.
+     *
+     * @param message a detailed message explaining the reason for the exception
      */
     public CourseNotFoundException(String message) {
-        super(message);
+        super("Course", message);
     }
 }
 
