@@ -110,6 +110,30 @@ public class Category {
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
+
+    /**
+     * Checks if the category is currently active.
+     *
+     * @return true if the category is active, false otherwise
+     */
+    public boolean isActive() {
+        return active;
+    }
+
+    /**
+     * Activates the category, making it available for use.
+     */
+    public void activate() {
+        this.active = true;
+    }
+
+    /**
+     * Deactivates the category, making it unavailable for use.
+     */
+    public void deactivate() {
+        this.active = false;
+    }
+
 }
 
 
