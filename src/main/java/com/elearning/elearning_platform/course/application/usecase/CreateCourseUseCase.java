@@ -60,7 +60,7 @@ public class CreateCourseUseCase {
         // Validation instructor exists
         Optional<User> instructorOptional = userRepository.findById(command.instructorId().value());
         if (instructorOptional.isEmpty()) {
-            throw new UserNotFoundException(UUID.fromString("Instructor with this ID doesn't exists"));
+            throw new UserNotFoundException(command.instructorId().value());
         }
         // Validation instructor is Active
         User instructor = instructorOptional.get();

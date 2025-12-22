@@ -29,6 +29,12 @@ public class PublishCourseUseCase {
     private final CourseRepositoryPort courseRepository;
     private final UserRepositoryPort userRepository;
 
+    public PublishCourseUseCase(CourseRepositoryPort courseRepository,
+                                UserRepositoryPort userRepository) {
+        this.courseRepository = courseRepository;
+        this.userRepository = userRepository;
+    }
+
     /**
      * Executes the process of publishing a course.
      *
@@ -57,7 +63,7 @@ public class PublishCourseUseCase {
         // Validates requesting user is active, has INSTRUCTOR role, and is owner of course
         Optional<User> requestingUserOptional = userRepository.findById(command.requestingUserId().value());
         if (requestingUserOptional.isEmpty()) {
-            throw new UserNotFoundException(UUID.fromString("User with ID " + command.requestingUserId() + " not found"));
+            throw new UserNotFoundException(command.requestingUserId().value());
         }
 
         User requestingUser = requestingUserOptional.get();
