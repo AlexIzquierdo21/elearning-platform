@@ -40,7 +40,8 @@ public class RegisterUserUseCase {
      * @param passwordEncoder encoder for hashing passwords (BCrypt)
      */
     public RegisterUserUseCase(UserRepositoryPort userRepository,
-                               PasswordEncoder passwordEncoder) {
+                               PasswordEncoder passwordEncoder
+    ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
