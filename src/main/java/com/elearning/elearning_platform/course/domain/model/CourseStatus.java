@@ -1,5 +1,7 @@
 package com.elearning.elearning_platform.course.domain.model;
 
+import com.elearning.elearning_platform.course.domain.exception.InvalidCourseStateException;
+
 /**
  * Represents the publication status of a course in its lifecycle.
  *
