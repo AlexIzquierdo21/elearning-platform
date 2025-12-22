@@ -12,7 +12,6 @@ import com.elearning.elearning_platform.user.domain.exception.UserNotFoundExcept
 import com.elearning.elearning_platform.user.domain.model.Role;
 import com.elearning.elearning_platform.user.domain.model.User;
 import com.elearning.elearning_platform.user.domain.port.out.UserRepositoryPort;
-import com.elearning.elearning_platform.user.domain.valueobject.UserId;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -58,31 +57,31 @@ public class CreateCourseUseCase {
      * @throws ValidationException if the specified category is not active
      */
     public Course execute(CreateCourseCommand command) {
-
+        // Validation instructor exists
         Optional<User> instructorOptional = userRepository.findById(command.instructorId().value());
         if (instructorOptional.isEmpty()) {
-            throw new UserNotFoundException(UUID.fromString("Instructor with this ID doesn´t exists"));
+            throw new UserNotFoundException(UUID.fromString("Instructor with this ID doesn't exists"));
         }
-
+        // Validation instructor is Active
         User instructor = instructorOptional.get();
         if (!instructor.getActive()) {
             throw new ValidationException("Instructor is not active");
         }
-
+        // Validation user has an INSTRUCTOR role
         if (instructor.getRole() != Role.INSTRUCTOR) {
             throw new ValidationException("User must be an INSTRUCTOR to create a course");
         }
-
+        // Validation category exists
         Optional<Category> categoryOptional = categoryRepository.findById(command.categoryId());
         if (categoryOptional.isEmpty()) {
             throw new CategoryNotFoundException("Category with ID " + command.categoryId());
         }
-
+        // Validation category is active
         Category category = categoryOptional.get();
         if (!category.isActive()) {
             throw new ValidationException("Category is not active");
         }
-
+        // Create course
         return Course.create(command.title(),
                 command.description(),
                 command.price(),
