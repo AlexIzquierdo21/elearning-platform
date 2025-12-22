@@ -7,6 +7,7 @@ import com.elearning.elearning_platform.user.domain.exception.InvalidCredentials
 import com.elearning.elearning_platform.user.domain.model.Role;
 import com.elearning.elearning_platform.user.domain.model.User;
 import com.elearning.elearning_platform.user.domain.port.out.UserRepositoryPort;
+import com.elearning.elearning_platform.user.domain.valueobject.UserId;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -50,7 +51,7 @@ class LoginUseCaseTest {
      */
     private User user(String email, String hashedPassword, boolean active) {
         return User.fromRepository(
-                UUID.randomUUID(),
+                UserId.of(UUID.randomUUID()),
                 Email.of(email),
                 hashedPassword,
                 "Alex",

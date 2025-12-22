@@ -6,7 +6,6 @@ import com.elearning.elearning_platform.course.domain.exception.InvalidCourseSta
  * Represents the publication status of a course in its lifecycle.
  *
  * Valid state transitions:
- *
  *   DRAFT → PUBLISHED
  *   PUBLISHED → ARCHIVED
  *
