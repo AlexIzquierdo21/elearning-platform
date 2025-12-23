@@ -1,10 +1,9 @@
 package com.elearning.elearning_platform.course.infrastructure.adapter.out.persistence;
 
-import com.elearning.elearning_platform.course.domain.model.Category;
 import com.elearning.elearning_platform.course.domain.model.CourseStatus;
+import com.elearning.elearning_platform.shared.domain.valueobject.Money;
 import com.elearning.elearning_platform.shared.infrastructure.persistence.BaseEntity;
-import com.elearning.elearning_platform.user.domain.model.User;
-import com.elearning.elearning_platform.user.domain.valueobject.UserId;
+
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;

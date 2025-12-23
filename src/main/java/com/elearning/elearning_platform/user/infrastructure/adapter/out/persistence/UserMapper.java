@@ -27,7 +27,7 @@ public class UserMapper {
      */
     public static UserEntity toEntity(User user) {
         return new UserEntity(
-                user.getId().value(),  // ← CAMBIO: UserId → UUID
+                user.getId().value(),
                 user.getEmail().getValue(),
                 user.getPassword(),
                 user.getFirstName(),

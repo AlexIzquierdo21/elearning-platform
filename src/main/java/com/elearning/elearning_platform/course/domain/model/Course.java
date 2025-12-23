@@ -235,6 +235,28 @@ public class Course {
     public LocalDateTime getPublishedAt() {
         return publishedAt;
     }
+
+    /**
+     * private final CourseId id;
+     *     private String title;
+     *     private String description;
+     *     private Money price;
+     *     private CourseStatus status;
+     *     private final UserId instructorId;
+     *     private CategoryId categoryId;
+     *     private final LocalDateTime createdAt;
+     *     private LocalDateTime updatedAt;
+     *     private LocalDateTime publishedAt;
+     * @param id
+     * @return
+     */
+    public static Course fromRepository(CourseId id, String title, String description,
+                                        Money price, CourseStatus status, UserId instructorId,
+                                        CategoryId categoryId, LocalDateTime createdAt, LocalDateTime updatedAt,
+                                        LocalDateTime publishedAt) {
+        return new Course(id, title, description, price, status,
+                instructorId, categoryId, createdAt, updatedAt, publishedAt);
+    }
 }
 
 
