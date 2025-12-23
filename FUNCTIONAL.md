@@ -118,8 +118,8 @@ erDiagram
         Text description
         Decimal price "Min: 1€"
         String status "DRAFT, PUBLISHED, ARCHIVED"
-        Long instructor_id FK
-        Long category_id FK
+        UUID instructor_id FK
+        UUID category_id FK
         Timestamp created_at
         Timestamp updated_at
         Timestamp published_at "Null si DRAFT"
@@ -130,7 +130,7 @@ erDiagram
         String title
         Text description
         Integer order_index "Orden en curso"
-        Long course_id FK
+        UUID course_id FK
         Timestamp created_at
     }
 

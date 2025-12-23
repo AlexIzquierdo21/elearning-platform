@@ -2,6 +2,7 @@ package com.elearning.elearning_platform.user.infrastructure.adapter.out.persist
 
 import com.elearning.elearning_platform.shared.infrastructure.persistence.BaseEntity;
 import com.elearning.elearning_platform.user.domain.model.Role;
+import com.elearning.elearning_platform.user.domain.valueobject.UserId;
 import jakarta.persistence.*;
 
 import java.util.UUID;
@@ -67,7 +68,6 @@ public class UserEntity extends BaseEntity {
     /**
      * Full constructor to create a UserEntity instance.
      *
-     * @param id User's UUID
      * @param email User's email
      * @param password Hashed password
      * @param firstName First name
@@ -75,10 +75,10 @@ public class UserEntity extends BaseEntity {
      * @param role User role
      * @param active Active status
      */
-    public UserEntity(UUID id, String email, String password,
+    public UserEntity(String email, String password,
                       String firstName, String lastName,
-                      Role role, Boolean active) {
-        this.id = id;
+                      Role role, Boolean active
+    ) {
         this.email = email;
         this.password = password;
         this.firstName = firstName;
