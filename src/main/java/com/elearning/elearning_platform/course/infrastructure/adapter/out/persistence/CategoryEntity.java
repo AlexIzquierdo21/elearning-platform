@@ -5,71 +5,37 @@ import jakarta.persistence.*;
 
 import java.util.UUID;
 
-/**
- * JPA entity representing the Category table.
- *
- * This entity is the persistence model for course categories and is used
- * exclusively by the infrastructure layer. It maps directly to the
- * {@code categories} table in the database.
- */
 @Entity
 @Table(name = "categories")
 public class CategoryEntity extends BaseEntity {
 
-    /**
-     * Primary key of the category.
-     * Generated automatically using UUID strategy.
-     */
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    /**
-     * Unique name of the category.
-     */
     @Column(nullable = false, unique = true)
     private String name;
 
-    /**
-     * Optional description of the category.
-     */
     @Column
     private String description;
 
-    /**
-     * URL-friendly unique slug generated from the category name.
-     */
     @Column(nullable = false, unique = true)
     private String slug;
 
-    /**
-     * Indicates whether the category is active.
-     *
-     * Defaults to {@code true}.
-     */
     @Column(nullable = false)
     private Boolean active = true;
 
     /**
      * Default no-args constructor required by JPA.
      */
-    protected CategoryEntity() {
+    public CategoryEntity() {
     }
 
-    /**
-     * Constructs a CategoryEntity with the provided values.
-     *
-     * @param name the category name
-     * @param description the category description
-     * @param slug the URL-friendly slug
-     * @param active whether the category is active
-     */
-    public CategoryEntity(
-            String name,
-            String description,
-            String slug,
-            Boolean active
+    public CategoryEntity(UUID id, String name,
+                          String description, String slug,
+                          Boolean active
     ) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.slug = slug;
@@ -80,19 +46,39 @@ public class CategoryEntity extends BaseEntity {
         return id;
     }
 
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {
         return description;
     }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public String getSlug() {
         return slug;
     }
 
+    public void setSlug(String slug) {
+        this.slug = slug;
+    }
+
     public Boolean getActive() {
         return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 }

@@ -68,6 +68,7 @@ public class UserEntity extends BaseEntity {
     /**
      * Full constructor to create a UserEntity instance.
      *
+     * @param id User's UUID
      * @param email User's email
      * @param password Hashed password
      * @param firstName First name
@@ -75,10 +76,10 @@ public class UserEntity extends BaseEntity {
      * @param role User role
      * @param active Active status
      */
-    public UserEntity(String email, String password,
+    public UserEntity(UUID id, String email, String password,
                       String firstName, String lastName,
-                      Role role, Boolean active
-    ) {
+                      Role role, Boolean active) {
+        this.id = id;
         this.email = email;
         this.password = password;
         this.firstName = firstName;
