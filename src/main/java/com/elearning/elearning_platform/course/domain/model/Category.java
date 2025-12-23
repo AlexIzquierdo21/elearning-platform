@@ -134,6 +134,11 @@ public class Category {
         this.active = false;
     }
 
+    public static Category fromRepository(CategoryId id, String name, String description,
+                                          String slug, boolean active, LocalDateTime createdAt) {
+        return new Category(id, name, description, slug, active, createdAt);
+    }
+
 }
 
 

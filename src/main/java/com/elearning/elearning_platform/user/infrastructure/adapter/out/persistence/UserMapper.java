@@ -45,7 +45,7 @@ public class UserMapper {
      */
     public static User toDomain(UserEntity entity) {
         return User.fromRepository(
-                UserId.of(entity.getId()),  // ← CAMBIO: UUID → UserId
+                UserId.of(entity.getId()),
                 Email.of(entity.getEmail()),
                 entity.getPassword(),
                 entity.getFirstName(),
