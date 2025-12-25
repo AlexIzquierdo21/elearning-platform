@@ -57,4 +57,6 @@ public interface JpaCourseRepository extends JpaRepository<CourseEntity, UUID> {
      *         or an empty list if no courses are found
      */
     List<CourseEntity> findByCategoryId(UUID categoryId);
+
+    List<CourseEntity> id(UUID id);
 }
