@@ -5,21 +5,29 @@ import jakarta.persistence.*;
 
 import java.util.UUID;
 
+/**
+ * JPA entity representing a category in the persistence layer.
+ *
+ * This entity maps to the "categories" table in the database and serves
+ * as the infrastructure representation of a Category domain model.
+ *
+ * The ID is not auto-generated; it is provided by the domain layer
+ * through the CategoryId value object.
+ */
 @Entity
 @Table(name = "categories")
 public class CategoryEntity extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    private UUID id;  // ← SIN @GeneratedValue
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 100)
     private String name;
 
-    @Column
+    @Column(length = 500)
     private String description;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 150)
     private String slug;
 
     @Column(nullable = false)
@@ -31,6 +39,15 @@ public class CategoryEntity extends BaseEntity {
     public CategoryEntity() {
     }
 
+    /**
+     * Full constructor for creating a CategoryEntity with all fields.
+     *
+     * @param id unique identifier
+     * @param name category name
+     * @param description category description
+     * @param slug URL-friendly slug
+     * @param active whether the category is active
+     */
     public CategoryEntity(UUID id, String name,
                           String description, String slug,
                           Boolean active
@@ -41,6 +58,8 @@ public class CategoryEntity extends BaseEntity {
         this.slug = slug;
         this.active = active;
     }
+
+    // Getters and Setters
 
     public UUID getId() {
         return id;
