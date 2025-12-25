@@ -82,10 +82,12 @@ public class CreateCourseUseCase {
             throw new ValidationException("Category is not active");
         }
         // Create course
-        return Course.create(command.title(),
+        Course course = Course.create(command.title(),
                 command.description(),
                 command.price(),
                 command.instructorId(),
                 command.categoryId());
+
+        return courseRepository.save(course);
     }
 }
