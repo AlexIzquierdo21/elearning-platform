@@ -21,7 +21,6 @@ public class UserEntity extends BaseEntity {
      * Primary key of the user, generated as a UUID.
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     /**
